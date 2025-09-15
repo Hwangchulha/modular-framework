@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "id"
+      ]
+    },
+    {
+      "required": [
+        "email"
+      ]
+    }
+  ],
+  "additionalProperties": false
+}

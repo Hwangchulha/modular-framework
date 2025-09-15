@@ -1,0 +1,10 @@
+
+name: modules.auth.login
+version: 1.0.0
+desc: "로그인(JWT 발급)"
+engine_api: "^1.4"
+actions:
+  LOGIN:
+    modes: [SINGLE]
+    input_schema: schema/login_in.json
+    output_schema: schema/login_out.json

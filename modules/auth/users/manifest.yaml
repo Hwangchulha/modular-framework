@@ -1,0 +1,14 @@
+
+name: modules.auth.users
+version: 1.0.0
+desc: "사용자 관리 (회원가입/조회)"
+engine_api: "^1.4"
+actions:
+  REGISTER:
+    modes: [SINGLE]
+    input_schema: schema/register_in.json
+    output_schema: schema/register_out.json
+  GET:
+    modes: [SINGLE]
+    input_schema: schema/get_in.json
+    output_schema: schema/get_out.json
