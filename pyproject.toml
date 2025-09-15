@@ -1,0 +1,19 @@
+
+[project]
+name = "modular-framework"
+version = "1.0.0"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.23",
+  "pydantic>=2.6",
+  "PyYAML>=6.0",
+  "jsonschema>=4.21",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.uvicorn]
+factory = false

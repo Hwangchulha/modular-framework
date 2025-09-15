@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "required": [
+    "pong"
+  ],
+  "properties": {
+    "pong": {
+      "type": "boolean"
+    },
+    "echo": {}
+  },
+  "additionalProperties": true
+}

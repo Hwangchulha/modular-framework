@@ -1,0 +1,15 @@
+
+name: modules.foo.bar
+version: 1.0.0
+desc: "Foo 엔티티 관리 모듈"
+engine_api: "^1.4"
+dependencies:
+  python: ">=3.11"
+actions:
+  CREATE:
+    modes: [SINGLE]
+    input_schema: schema/create_in.json
+    output_schema: schema/create_out.json
+    required_scopes: [foo:create]
+    secrets: [FOO_APP_KEY, FOO_APP_SECRET]
+    resources: { api: { rps: 10, burst: 20 } }

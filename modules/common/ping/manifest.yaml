@@ -1,0 +1,10 @@
+
+name: modules.common.ping
+version: 1.0.0
+desc: "헬스체크 및 에코"
+engine_api: "^1.4"
+actions:
+  PING:
+    modes: [SINGLE, BULK]
+    input_schema: schema/ping_in.json
+    output_schema: schema/ping_out.json
