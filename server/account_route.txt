@@ -1,0 +1,1 @@
+GET /ui/account route expected in server/main.py (uses static html ui/account.html)

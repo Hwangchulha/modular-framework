@@ -1,0 +1,10 @@
+
+name: modules.auth.me
+version: 1.0.0
+desc: "JWT 검증 및 프로필 조회"
+engine_api: "^1.4"
+actions:
+  VERIFY:
+    modes: [SINGLE]
+    input_schema: schema/verify_in.json
+    output_schema: schema/verify_out.json

@@ -1,0 +1,207 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Auth</title>
+  <style>
+    :root { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Noto Sans KR', sans-serif; }
+    body { margin: 0; background: #0b0c0f; color: #e6e7ea; }
+    .wrap { max-width: 820px; margin: 48px auto; padding: 24px; background: #12141a; border: 1px solid #23262d; border-radius: 12px; }
+    h1 { margin: 0 0 16px; font-size: 20px; }
+    .kpi { margin-bottom: 16px; display:flex; align-items:center; gap:8px; }
+    .dot { width:10px; height:10px; border-radius:50%; }
+    .ok { background:#22c55e; } .bad { background:#ef4444; }
+    .msg { font-size:12px; color:#aab1bb; }
+    .tabs { display:flex; gap:8px; margin-bottom: 12px; }
+    .tab { padding:8px 12px; border-radius: 8px; border:1px solid #2c313a; background:#0f1116; cursor:pointer; }
+    .tab.active { background:#1a2233; border-color:#345; }
+    .pane { display:none; }
+    .pane.active { display:block; }
+    .grid { display: grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .card { padding: 16px; border: 1px solid #23262d; border-radius: 12px; background:#0f1116; }
+    label { display:block; font-size: 12px; color:#aab1bb; margin: 8px 0 4px; }
+    input { width:100%; padding:10px 12px; border-radius: 8px; border:1px solid #2c313a; background:#12141a; color:#e6e7ea; }
+    button { margin-top:12px; padding:10px 14px; border-radius: 8px; border:1px solid #2f6feb; background:#3b82f6; color:white; cursor:pointer; }
+    button:disabled { opacity:.6; cursor:not-allowed }
+    pre { background:#0b0c0f; padding:12px; border-radius:8px; overflow:auto; border:1px solid #23262d; }
+    .row { display:flex; gap:12px; align-items:center; }
+    .spacer { flex:1; }
+    .danger { background:#ef4444; border-color:#b91c1c; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="row">
+      <div class="kpi"><div id="dot" class="dot bad"></div><div id="health" class="msg">백엔드 연결 중...</div></div>
+      <div class="spacer"></div>
+      <button id="btnToAccount" style="display:none">내 계정으로</button>
+      <button id="btnLogout" class="danger" style="display:none">로그아웃</button>
+    </div>
+    <h1>로그인 / 회원가입 / 내 계정</h1>
+
+    <div class="tabs">
+      <div class="tab active" data-pane="signup">회원가입</div>
+      <div class="tab" data-pane="login">로그인</div>
+      <div class="tab" data-pane="account">내 계정</div>
+    </div>
+
+    <div id="pane-signup" class="pane active">
+      <div class="grid">
+        <div class="card">
+          <h3>회원가입</h3>
+          <label>이메일</label>
+          <input id="su_email" type="email" placeholder="you@example.com">
+          <label>비밀번호</label>
+          <input id="su_pw" type="password" placeholder="******">
+          <button id="btn_signup">가입</button>
+          <pre id="out_signup"></pre>
+        </div>
+        <div class="card">
+          <h3>가이드</h3>
+          <p style="color:#aab1bb">가입 성공 후에는 오른쪽 <b>로그인</b> 탭으로 이동하세요.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="pane-login" class="pane">
+      <div class="grid">
+        <div class="card">
+          <h3>로그인</h3>
+          <label>이메일</label>
+          <input id="li_email" type="email" placeholder="you@example.com">
+          <label>비밀번호</label>
+          <input id="li_pw" type="password" placeholder="******">
+          <button id="btn_login">로그인</button>
+          <pre id="out_login"></pre>
+        </div>
+        <div class="card">
+          <h3>상태</h3>
+          <pre id="out_status"></pre>
+        </div>
+      </div>
+    </div>
+
+    <div id="pane-account" class="pane">
+      <div class="card">
+        <div class="row">
+          <h3>내 계정</h3><div class="spacer"></div>
+          <button class="danger" id="btnLogout2">로그아웃</button>
+        </div>
+        <pre id="out_account"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const j = x => JSON.stringify(x, null, 2);
+
+    // Tabs
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('pane-' + t.dataset.pane).classList.add('active');
+      if (t.dataset.pane === 'account') { loadAccount(); }
+    }));
+
+    // Health
+    async function ping() {
+      try {
+        const r = await fetch('/health');
+        const ok = r.ok;
+        document.getElementById('dot').className = 'dot ' + (ok ? 'ok' : 'bad');
+        document.getElementById('health').textContent = ok ? '백엔드 연결 OK' : '백엔드 연결 실패';
+      } catch(e) {
+        document.getElementById('dot').className = 'dot bad';
+        document.getElementById('health').textContent = '백엔드 연결 실패';
+      }
+    }
+
+    // Helpers
+    function setBusy(id, on){ const b=document.getElementById(id); b.disabled=on; if(!b) return; const base=b.dataset.base||b.textContent; if(!b.dataset.base) b.dataset.base=base; b.textContent = on ? '처리 중...' : b.dataset.base; }
+    const token = () => localStorage.getItem('jwt');
+    function refreshTopBar(){
+      const has = !!token();
+      document.getElementById('btnToAccount').style.display = has ? 'inline-block':'none';
+      document.getElementById('btnLogout').style.display = has ? 'inline-block':'none';
+    }
+
+    // Signup
+    async function signup() {
+      const email = document.getElementById('su_email').value.trim();
+      const password = document.getElementById('su_pw').value;
+      setBusy('btn_signup', true);
+      try {
+        const r = await fetch('/run?name=modules.auth.users', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({action:'REGISTER', mode:'SINGLE', input:{email, password}})
+        });
+        const data = await r.json();
+        document.getElementById('out_signup').textContent = j(data);
+      } catch(e) {
+        document.getElementById('out_signup').textContent = '요청 실패: ' + e;
+      } finally { setBusy('btn_signup', false); }
+    }
+
+    // Login
+    async function login() {
+      const email = document.getElementById('li_email').value.trim();
+      const password = document.getElementById('li_pw').value;
+      setBusy('btn_login', true);
+      try {
+        const r = await fetch('/run?name=modules.auth.login', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({action:'LOGIN', mode:'SINGLE', input:{email, password}})
+        });
+        const data = await r.json();
+        if (data?.data?.token) {
+          localStorage.setItem('jwt', data.data.token);
+          refreshTopBar();
+          document.getElementById('out_status').textContent = '로그인 성공. 토큰 저장됨.';
+        }
+        document.getElementById('out_login').textContent = j(data);
+      } catch(e) {
+        document.getElementById('out_login').textContent = '요청 실패: ' + e;
+      } finally { setBusy('btn_login', false); }
+    }
+
+    // Account
+    async function loadAccount(){
+      const t = token();
+      if (!t) {
+        document.getElementById('out_account').textContent = '로그인이 필요합니다.';
+        return;
+      }
+      try {
+        const r = await fetch('/run?name=modules.auth.me', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({action:'VERIFY', mode:'SINGLE', input:{token: t}})
+        });
+        const data = await r.json();
+        document.getElementById('out_account').textContent = j(data);
+      } catch(e) {
+        document.getElementById('out_account').textContent = '요청 실패: ' + e;
+      }
+    }
+
+    // Logout
+    function logout(){
+      localStorage.removeItem('jwt'); refreshTopBar(); document.getElementById('out_status').textContent='로그아웃됨'; loadAccount();
+    }
+
+    document.getElementById('btn_signup').addEventListener('click', signup);
+    document.getElementById('btn_login').addEventListener('click', login);
+    document.getElementById('btnLogout').addEventListener('click', logout);
+    document.getElementById('btnLogout2').addEventListener('click', logout);
+    document.getElementById('btnToAccount').addEventListener('click', () => {
+      document.querySelector('.tab[data-pane="account"]').click();
+    });
+
+    refreshTopBar();
+    ping(); setInterval(ping, 3000);
+  </script>
+</body>
+</html>
