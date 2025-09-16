@@ -1,0 +1,19 @@
+name: LayerGuard
+on: [pull_request]
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install psutil
+      - run: python policy_guard.py | tee guard_report.json
+      - run: |
+          python - <<'PY'
+          import json, sys
+          r=json.load(open("guard_report.json"))
+          if any(r[k] for k in ("forbidden_imports","ui_mounts","missing_manifests")):
+              print("LayerGuard failed:", r["summary"]); sys.exit(1)
+          PY
