@@ -1,12 +1,11 @@
 {
   "type": "object",
   "properties": {
-    "user_id": {
+    "access_token": {
       "type": "string"
     }
   },
   "required": [
-    "user_id"
-  ],
-  "additionalProperties": false
+    "access_token"
+  ]
 }

@@ -1,12 +1,12 @@
 {
   "type": "object",
   "properties": {
-    "user_id": {
-      "type": "string"
+    "ok": {
+      "type": "boolean"
     }
   },
   "required": [
-    "user_id"
+    "ok"
   ],
   "additionalProperties": false
 }

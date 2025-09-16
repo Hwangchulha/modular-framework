@@ -3,6 +3,7 @@ import time
 import uuid
 from typing import Dict, Tuple, Any, Optional
 from .errors import err_forbidden, err_secret, err_rate_limit
+from . import jwt_utils
 
 class TokenBucket:
     def __init__(self, rate_per_sec: float, burst: int):
@@ -71,19 +72,38 @@ class Pipeline:
             from .errors import err_schema
             raise err_schema("Missing 'action' in envelope")
 
-        required = set(self.registry.get_required_scopes(module_name, action) or [])
+        # Parse Bearer -> scopes, user_id
         provided = set((headers.get("X-Scopes") or "").split())
+        auth = headers.get("Authorization") or headers.get("authorization")
+        user_id = None
+        if auth and auth.lower().startswith("bearer "):
+            token = auth.split(" ",1)[1].strip()
+            try:
+                claims = jwt_utils.verify_access(token)
+                user_id = claims.get("sub")
+                for s in claims.get("scopes", []):
+                    if s: provided.add(s)
+            except Exception:
+                # invalid token -> ignore; module required_scopes will fail
+                pass
+
+        # scopes check
+        required = set(self.registry.get_required_scopes(module_name, action) or [])
         if required and not required.issubset(provided):
             raise err_forbidden("Missing required scopes", {"required": list(required), "provided": list(provided)})
 
+        # secrets
         secrets = (self.registry.get_required_secrets(module_name, action) or [])
         missing = [s for s in secrets if not os.environ.get(s)]
         if missing:
             raise err_secret("Missing required secrets", {"missing": missing})
 
+        # rate/circuit
         self._ensure_controls(module_name, action)
 
         ctx = {"request_id": req_id, "scopes": list(provided)}
+        if user_id:
+            ctx["user_id"] = user_id
         env = {"start_ts": time.time(), "module": module_name, "action": action, "mode": mode}
         return ctx, env
 

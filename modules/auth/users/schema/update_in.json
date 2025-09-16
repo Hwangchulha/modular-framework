@@ -1,12 +1,13 @@
 {
   "type": "object",
   "properties": {
-    "user_id": {
-      "type": "string"
+    "nickname": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "required": [
-    "user_id"
+    "nickname"
   ],
   "additionalProperties": false
 }

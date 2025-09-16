@@ -1,9 +1,5 @@
 {
   "type": "object",
-  "required": [
-    "email",
-    "password"
-  ],
   "properties": {
     "email": {
       "type": "string",
@@ -12,7 +8,16 @@
     "password": {
       "type": "string",
       "minLength": 6
+    },
+    "nickname": {
+      "type": "string",
+      "minLength": 1
     }
   },
+  "required": [
+    "email",
+    "password",
+    "nickname"
+  ],
   "additionalProperties": false
 }

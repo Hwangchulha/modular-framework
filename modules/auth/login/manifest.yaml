@@ -1,10 +1,32 @@
-
 name: modules.auth.login
-version: 1.0.0
-desc: "로그인(JWT 발급)"
+version: 1.4.0
 engine_api: "^1.4"
 actions:
   LOGIN:
     modes: [SINGLE]
     input_schema: schema/login_in.json
     output_schema: schema/login_out.json
+    required_scopes: []
+    secrets: [JWT_SECRET]
+    resources: { rps: 20, burst: 40 }
+  REFRESH:
+    modes: [SINGLE]
+    input_schema: schema/refresh_in.json
+    output_schema: schema/refresh_out.json
+    required_scopes: []
+    secrets: [JWT_SECRET]
+    resources: { rps: 30, burst: 60 }
+  LOGOUT:
+    modes: [SINGLE]
+    input_schema: schema/logout_in.json
+    output_schema: schema/logout_out.json
+    required_scopes: []
+    secrets: [JWT_SECRET]
+    resources: { rps: 30, burst: 60 }
+  WHOAMI:
+    modes: [SINGLE]
+    input_schema: schema/whoami_in.json
+    output_schema: schema/whoami_out.json
+    required_scopes: []
+    secrets: [JWT_SECRET]
+    resources: { rps: 50, burst: 100 }

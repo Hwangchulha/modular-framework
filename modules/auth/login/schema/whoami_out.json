@@ -1,10 +1,13 @@
 {
   "type": "object",
   "properties": {
-    "access_token": {
+    "id": {
       "type": "string"
     },
-    "refresh_token": {
+    "email": {
+      "type": "string"
+    },
+    "nickname": {
       "type": "string"
     },
     "scopes": {
@@ -15,8 +18,8 @@
     }
   },
   "required": [
-    "access_token",
-    "refresh_token",
+    "id",
+    "email",
     "scopes"
   ]
 }

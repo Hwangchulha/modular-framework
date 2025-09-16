@@ -3,3 +3,4 @@ uvicorn>=0.23
 pydantic>=2.5
 jsonschema>=4.19
 PyYAML>=6.0
+PyJWT>=2.8

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modular Framework — Web UI</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header>
+    <h1>Modular Framework</h1>
+    <nav>
+      <button data-nav="login">로그인</button>
+      <button data-nav="signup">회원가입</button>
+      <button data-nav="profile">프로필</button>
+    </nav>
+  </header>
+
+  <main id="view">
+    <!-- views injected by JS -->
+  </main>
+
+  <footer>
+    <small>API: <span id="apiBase"></span></small>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

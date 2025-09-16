@@ -1,27 +1,19 @@
 {
   "type": "object",
-  "required": [
-    "found"
-  ],
   "properties": {
-    "found": {
-      "type": "boolean"
+    "id": {
+      "type": "string"
     },
-    "user": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "created_at": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
+    "email": {
+      "type": "string"
+    },
+    "nickname": {
+      "type": "string"
     }
   },
-  "additionalProperties": true
+  "required": [
+    "id",
+    "email"
+  ],
+  "additionalProperties": false
 }

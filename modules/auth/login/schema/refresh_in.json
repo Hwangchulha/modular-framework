@@ -1,12 +1,12 @@
 {
   "type": "object",
   "properties": {
-    "user_id": {
+    "refresh_token": {
       "type": "string"
     }
   },
   "required": [
-    "user_id"
+    "refresh_token"
   ],
   "additionalProperties": false
 }
