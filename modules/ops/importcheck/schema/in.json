@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "targets"
+  ],
+  "additionalProperties": false
+}

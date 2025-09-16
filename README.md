@@ -1,24 +1,25 @@
-# Step — 네트워크 접근 가능한 Web UI + 로그인/회원가입/프로필(세션/자동로그인)
+# Step 3 — 인증/보안 고도화 (지침 v1.4 준수)
 
-이 번들은 기존 레포(`modular-framework`)에 **그대로 덮어쓰기**하면 됩니다.
+이 번들은 기존 레포에 **그대로 덮어쓰기**하면 됩니다.
 
-## 무엇이 추가되었나
-- **ui_web/**: 별도 웹 서버(독립 프로세스). 정적 SPA(HTML/JS/CSS) 제공 — 다른 네트워크에서 접속 가능.
-- **start.py**: GUI에서 **API 서버**와 **Web UI 서버**를 각각 실행/중단. ‘외부 접속 허용(0.0.0.0)’ 토글, 포트 설정, UI 열기/URL 복사 제공.
-- **인증 모듈**(manifest+schema+handler):
-  - `modules.auth.users`: REGISTER, GET, UPDATE
-  - `modules.auth.login`: LOGIN, REFRESH, LOGOUT, WHOAMI
-  - 저장소: `data/auth.db` (SQLite, PBKDF2 해시)
-- **JWT 유틸 + 인터셉터 확장**
-  - `core/jwt_utils.py`: 액세스 토큰(JWT) 발급/검증
-  - 인터셉터가 `Authorization: Bearer <JWT>`를 파싱하여 `scopes`/`user_id`를 컨텍스트에 주입
-- **CORS 허용**: API 서버가 외부 UI에서의 호출을 허용(개발 기본: 모든 오리진 허용)
+## 포함 사항
+- **core/interceptor.py**: client_ip 추출(X-Forwarded-For, X-Real-IP, X-Client-IP) → ctx.client_ip
+- **server/main.py**: Request.client.host를 X-Client-IP로 전달
+- **core/ratelimit.py**: 경량 레이트리미터(슬라이딩 윈도우)
+- **modules.auth._store**: DB 경로 수정(루트/data), 컬럼(role), 테이블(reset_tokens), 비밀번호 변경·재설정 지원
+- **modules.auth.users**: REGISTER/GET/UPDATE + **CHANGE_PASSWORD** 추가
+- **modules.auth.reset**(신규): REQUEST/CONFIRM (비밀번호 재설정)
+- **modules.auth.login**: 로그인 **레이트리미트(이메일+IP)**, **리프레시 토큰 회전(ROTATE)**
+- **ui_web/**: 로그인/회원가입/프로필에
+  - “비밀번호 변경” 카드
+  - “비밀번호 재설정” 탭(코드 요청/확정 — 데모에선 코드 응답 표시)
+  - 에러 메시지 개선
 
-## 실행 (GUI만)
-1) `start.py` 더블클릭 → **[의존성 설치/점검]**
-2) **API 서버 시작** → **Web UI 시작** (필요 시 ‘외부 접속 허용’ 체크)
-3) **[Open Web UI]** 버튼 클릭 또는 표시된 URL로 접속(같은 네트워크의 다른 PC/모바일에서 접근 가능)
-4) Web UI에서 **회원가입 → 로그인 → 프로필 보기/수정**
-   - **자동 로그인**: 로그인 시 ‘자동 로그인’ 체크하면 refresh token을 로컬 저장(localStorage)하고, 페이지 재접속 시 자동 로그인 시도
+## 사용법
+1) `start.py` 실행 → [의존성 설치/점검] → API 시작 → Web UI 시작
+2) Web UI
+   - (회원가입) → (로그인)
+   - 프로필 탭에서 **비밀번호 변경**
+   - 비밀번호를 잊었으면 "비밀번호 재설정" 탭에서 **요청 → 코드 입력 → 새 비번 설정**
 
-> 서버는 여전히 **/run + Envelope**만 처리. Web UI는 **별도 프로세스**에서 정적 제공(지침 준수: API 서버가 UI를 서빙하지 않음).
+> 운영에서는 코드 전송을 이메일/SMS로 대체하세요. 여기선 데모이므로 응답으로 코드를 보여줍니다.

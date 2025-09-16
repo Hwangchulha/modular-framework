@@ -41,6 +41,13 @@ class CircuitBreaker:
     def allowed(self) -> bool:
         return time.time() >= self.open_until
 
+def _client_ip_from_headers(headers: Dict[str,str]) -> Optional[str]:
+    for k in ("x-forwarded-for","x-real-ip","x-client-ip"):
+        v = headers.get(k) or headers.get(k.upper())
+        if v:
+            return v.split(",")[0].strip()
+    return None
+
 class Pipeline:
     def __init__(self, registry):
         self.registry = registry
@@ -72,7 +79,7 @@ class Pipeline:
             from .errors import err_schema
             raise err_schema("Missing 'action' in envelope")
 
-        # Parse Bearer -> scopes, user_id
+        # Bearer -> scopes, user_id
         provided = set((headers.get("X-Scopes") or "").split())
         auth = headers.get("Authorization") or headers.get("authorization")
         user_id = None
@@ -84,7 +91,6 @@ class Pipeline:
                 for s in claims.get("scopes", []):
                     if s: provided.add(s)
             except Exception:
-                # invalid token -> ignore; module required_scopes will fail
                 pass
 
         # scopes check
@@ -104,6 +110,9 @@ class Pipeline:
         ctx = {"request_id": req_id, "scopes": list(provided)}
         if user_id:
             ctx["user_id"] = user_id
+        cip = _client_ip_from_headers(headers)
+        if cip:
+            ctx["client_ip"] = cip
         env = {"start_ts": time.time(), "module": module_name, "action": action, "mode": mode}
         return ctx, env
 

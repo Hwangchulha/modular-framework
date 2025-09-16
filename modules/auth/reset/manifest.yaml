@@ -1,0 +1,18 @@
+name: modules.auth.reset
+version: 1.4.0
+engine_api: "^1.4"
+actions:
+  REQUEST:
+    modes: [SINGLE]
+    input_schema: schema/request_in.json
+    output_schema: schema/request_out.json
+    required_scopes: []
+    secrets: [JWT_SECRET]
+    resources: { rps: 10, burst: 20 }
+  CONFIRM:
+    modes: [SINGLE]
+    input_schema: schema/confirm_in.json
+    output_schema: schema/confirm_out.json
+    required_scopes: []
+    secrets: [JWT_SECRET]
+    resources: { rps: 10, burst: 20 }

@@ -1,5 +1,5 @@
 name: modules.auth.users
-version: 1.4.0
+version: 1.4.1
 engine_api: "^1.4"
 actions:
   REGISTER:
@@ -23,3 +23,10 @@ actions:
     required_scopes: [auth:profile]
     secrets: [JWT_SECRET]
     resources: { rps: 20, burst: 40 }
+  CHANGE_PASSWORD:
+    modes: [SINGLE]
+    input_schema: schema/change_pw_in.json
+    output_schema: schema/change_pw_out.json
+    required_scopes: [auth:profile]
+    secrets: [JWT_SECRET]
+    resources: { rps: 10, burst: 20 }

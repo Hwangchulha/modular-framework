@@ -5,7 +5,7 @@ from core.registry import Registry
 from core.interceptor import build_pipeline
 from core.errors import FrameworkError
 
-app = FastAPI(title="modular-framework API", version="1.2.0")
+app = FastAPI(title="modular-framework API", version="1.3.0")
 
 # CORS (개발 기본: 모든 오리진 허용)
 app.add_middleware(
@@ -27,12 +27,14 @@ async def health():
 async def run(request: Request, name: str):
     envelope = {}
     action = "?"
-    import time as _t
-    start_ts = _t.time()
     try:
         envelope = await request.json()
         action = envelope.get("action", "?")
-        ctx, env = pipeline.pre(dict(request.headers), envelope, name)
+        headers = dict(request.headers)
+        # pass client ip
+        if request.client:
+            headers["X-Client-IP"] = request.client.host
+        ctx, env = pipeline.pre(headers, envelope, name)
         out = await registry.run(name, envelope, ctx=ctx, env=env)
         pipeline.notify(name, action, ok=bool(out.get("ok", True)))
         return JSONResponse(out)

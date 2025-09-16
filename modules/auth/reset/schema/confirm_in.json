@@ -1,23 +1,22 @@
 {
   "type": "object",
   "properties": {
-    "id": {
-      "type": "string"
-    },
     "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "code": {
       "type": "string"
     },
-    "nickname": {
-      "type": "string"
-    },
-    "role": {
-      "type": "string"
+    "new_password": {
+      "type": "string",
+      "minLength": 6
     }
   },
   "required": [
-    "id",
     "email",
-    "role"
+    "code",
+    "new_password"
   ],
   "additionalProperties": false
 }
