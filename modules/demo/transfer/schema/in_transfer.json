@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "properties": {
+    "from_account_id": {
+      "type": "string"
+    },
+    "to_bank_code": {
+      "type": "string"
+    },
+    "to_account_no": {
+      "type": "string"
+    },
+    "receiver_name": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "memo": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "from_account_id",
+    "to_bank_code",
+    "to_account_no",
+    "receiver_name",
+    "amount"
+  ],
+  "additionalProperties": false
+}

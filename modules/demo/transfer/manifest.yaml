@@ -1,0 +1,25 @@
+name: modules.demo.transfer
+version: 1.4.0
+engine_api: "^1.4"
+actions:
+  VALIDATE:
+    modes: [SINGLE]
+    input_schema: schema/in_transfer.json
+    output_schema: schema/out_validate.json
+    required_scopes: []
+    secrets: []
+    resources: { rps: 20, burst: 40 }
+  QUOTE:
+    modes: [SINGLE]
+    input_schema: schema/in_transfer.json
+    output_schema: schema/out_quote.json
+    required_scopes: []
+    secrets: []
+    resources: { rps: 20, burst: 40 }
+  SUBMIT:
+    modes: [SINGLE]
+    input_schema: schema/in_transfer.json
+    output_schema: schema/out_submit.json
+    required_scopes: []
+    secrets: []
+    resources: { rps: 10, burst: 20 }

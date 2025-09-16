@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "tx_id": {
+      "type": "string"
+    },
+    "fee": {
+      "type": "integer"
+    },
+    "amount": {
+      "type": "integer"
+    },
+    "new_balance": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "status": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tx_id",
+    "fee",
+    "amount",
+    "status"
+  ],
+  "additionalProperties": false
+}

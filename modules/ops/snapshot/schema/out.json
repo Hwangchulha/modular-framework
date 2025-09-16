@@ -1,0 +1,63 @@
+{
+  "type": "object",
+  "properties": {
+    "ts": {
+      "type": "number"
+    },
+    "series": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "calls": {
+            "type": "integer"
+          },
+          "ok": {
+            "type": "integer"
+          },
+          "fail": {
+            "type": "integer"
+          },
+          "p50_ms": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "p95_ms": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "p99_ms": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "last_ms": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "key",
+          "calls",
+          "ok",
+          "fail"
+        ]
+      }
+    }
+  },
+  "required": [
+    "ts",
+    "series"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "acc-001",
+    "bank_code": "003",
+    "bank_name": "Mock Securities (KIS Demo)",
+    "acct_no": "777-11-000123",
+    "alias": "메인",
+    "currency": "KRW",
+    "balance": 5000000
+  },
+  {
+    "id": "acc-002",
+    "bank_code": "003",
+    "bank_name": "Mock Securities (KIS Demo)",
+    "acct_no": "777-11-000124",
+    "alias": "서브",
+    "currency": "KRW",
+    "balance": 2500000
+  }
+]

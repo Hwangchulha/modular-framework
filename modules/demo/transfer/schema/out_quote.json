@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "fee": {
+      "type": "integer"
+    },
+    "currency": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "fee",
+    "currency"
+  ],
+  "additionalProperties": false
+}

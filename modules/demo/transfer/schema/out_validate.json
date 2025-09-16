@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "valid": {
+      "type": "boolean"
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "valid",
+    "reasons"
+  ],
+  "additionalProperties": false
+}

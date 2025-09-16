@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "properties": {
+    "accounts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "bank_code": {
+            "type": "string"
+          },
+          "bank_name": {
+            "type": "string"
+          },
+          "acct_no": {
+            "type": "string"
+          },
+          "alias": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "balance": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "bank_code",
+          "bank_name",
+          "acct_no",
+          "currency",
+          "balance"
+        ]
+      }
+    }
+  },
+  "required": [
+    "accounts"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,11 @@
+name: modules.demo.banks
+version: 1.4.0
+engine_api: "^1.4"
+actions:
+  LIST:
+    modes: [SINGLE]
+    input_schema: schema/in_list.json
+    output_schema: schema/out_list.json
+    required_scopes: []
+    secrets: []
+    resources: { rps: 20, burst: 40 }

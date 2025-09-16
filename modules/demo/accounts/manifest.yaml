@@ -1,0 +1,39 @@
+name: modules.demo.accounts
+version: 1.4.0
+engine_api: "^1.4"
+actions:
+  LIST:
+    modes: [SINGLE]
+    input_schema: schema/in_empty.json
+    output_schema: schema/out_list.json
+    required_scopes: []
+    secrets: []
+    resources: { rps: 50, burst: 100 }
+  BALANCE:
+    modes: [SINGLE]
+    input_schema: schema/in_balance.json
+    output_schema: schema/out_balance.json
+    required_scopes: []
+    secrets: []
+    resources: { rps: 50, burst: 100 }
+  INIT:
+    modes: [SINGLE]
+    input_schema: schema/in_empty.json
+    output_schema: schema/out_init.json
+    required_scopes: []
+    secrets: []
+    resources: { rps: 5, burst: 10 }
+  DEBIT:
+    modes: [SINGLE]
+    input_schema: schema/in_debit.json
+    output_schema: schema/out_balance.json
+    required_scopes: []
+    secrets: []
+    resources: { rps: 10, burst: 20 }
+  CREDIT:
+    modes: [SINGLE]
+    input_schema: schema/in_credit.json
+    output_schema: schema/out_balance.json
+    required_scopes: []
+    secrets: []
+    resources: { rps: 10, burst: 20 }
