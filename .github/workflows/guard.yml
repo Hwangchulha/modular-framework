@@ -8,7 +8,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install psutil
       - run: python policy_guard.py | tee guard_report.json
       - run: |
           python - <<'PY'

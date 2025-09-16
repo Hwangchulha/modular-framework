@@ -5,4 +5,4 @@ registry = Registry()
 
 async def RUN(input: dict):
     a = await registry.run("modules.common.ping", {"action":"PING","mode":"SINGLE","input":{"echo":"hi"}})
-    return {"summary": {"ping": a.get("data")}}
+    return {"summary": {"ping": a.get("data")}}  # 화면이 바로 쓰는 JSON

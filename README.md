@@ -1,106 +1,25 @@
-# modular-framework — 지침 v1.4 정렬판 (GUI First)
+# modular-framework — 지침 v1.4 정렬판 (One-File GUI)
 
-이 리포는 **모듈 추가만으로 확장**, **코어 불변**, **/run 엔벨로프 계약**, **GUI 우선 실행**을 강제합니다.
+**단 하나의 파일만 실행**하면 GUI가 뜨고, 거기서 **서버 실행/중단/헬스/테스트 호출**을 모두 버튼으로 제어합니다.  
+CLI 명령은 사용하지 않아도 됩니다.
 
-## 빠른 시작 (GUI First)
+## 실행 방법 (더블클릭 또는 한 줄)
 
-```bash
-python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-streamlit run ui/dev_launcher.py
-```
+- Windows/Mac: `start.py` 더블클릭
+- 또는: `python start.py` (원하면만)
 
-- Launcher에서 **Run server** 버튼을 누르면 API 서버가 올라갑니다.
-- 서버는 **UI를 서빙하지 않습니다.** (분리 프로세스)
-- 상태/헬스는 `/health`에서 확인, 실행 로그는 Launcher에서 확인하세요.
+첫 실행 시, GUI의 **[의존성 설치/점검]** 버튼을 눌러 필요한 패키지를 자동 설치할 수 있습니다.
 
-> 참고(Advanced): CLI로 직접 실행하려면 `uvicorn server.main:app --reload`
+---
 
-## API 계약 (Envelope)
+## 설계 원칙 요약 (지침 v1.4)
+- **코어 불변 / 모듈 추가만 확장**
+- **/run 엔벨로프 계약**(SINGLE/BULK 고정 규약)
+- **서버는 UI/페이지를 모름**(정적 서빙 금지, 얇은 API 쉘)
+- **페이지는 오케스트레이션만**(DB/모듈 직접 import 금지)
+- **Manifest 강제**(스키마·스코프·시크릿·레이트/버스트)
+- **인터셉터 체인**(스키마검증→스코프→시크릿→레이트/서킷→감사로그/메트릭)
+- **핫로딩 원자 교체**(스텁 포함)
+- **레이어 가드 + CI**(위반 PR 자동 실패)
 
-**POST /run?name=<module_name>** 에 JSON 바디:
-
-```json
-{
-  "action": "PING",
-  "mode": "SINGLE",
-  "input": { "echo": "hi" },
-  "options": { "dry_run": false },
-  "request_id": "optional-uuid"
-}
-```
-
-응답 예시(SINGLE):
-
-```json
-{
-  "ok": true,
-  "mode": "SINGLE",
-  "data": { "echo": "hi" },
-  "metrics": {}
-}
-```
-
-응답 예시(BULK):
-
-```json
-{
-  "ok": false,
-  "mode": "BULK",
-  "results": [
-    {"ok": true, "data": {"echo": "a"}, "index": 0},
-    {"ok": false, "error": {"code":"ERR_SCHEMA","message":"..."},"index": 1}
-  ],
-  "partial_ok": true
-}
-```
-
-### BULK 규칙
-- 기본값: `continue_on_error=false`
-- `results[]`와 `partial_ok`는 필수
-
-## 디렉터리 구조
-
-```
-/core      # contract, registry(핫로더), interceptor, errors
-/server    # API 쉘: /health, POST /run, /batch/*
-/modules   # 기능 모듈(각 모듈은 manifest.yaml 필수)
-/pages     # 오케스트레이션(하위 모듈 호출→JSON). 직접 DB/모듈 import 금지
-/db        # 테이블/SQL 모듈(스캐폴드)
-/jobs      # 스케줄러/워커(스캐폴드)
-/ui        # GUI Dev Launcher(서버와 분리, 서버가 UI 서빙 금지)
-/.github   # LayerGuard/CI
-policy_guard.py  # 레이어 가드(금지 import/manifest 누락/서버-UI 결합 감지)
-```
-
-## 레이어 가드(강제 규칙)
-
-- `server` → `pages|ui` import **금지**
-- `core`   → `pages|modules|ui` import **금지**
-- `pages`  → `db|modules` 직접 import **금지** (반드시 Registry 경유)
-
-PR에서 위반 시 CI가 실패합니다.
-
-## 모듈 계약 (manifest.yaml)
-
-각 모듈은 반드시 `manifest.yaml`을 포함해야 합니다.
-
-```yaml
-name: modules.common.ping
-version: 1.4.0
-engine_api: "^1.4"
-actions:
-  PING:
-    modes: [SINGLE]
-    input_schema: schema/in.json
-    output_schema: schema/out.json
-    required_scopes: []
-    secrets: []
-    resources: { rps: 50, burst: 100 }
-```
-
-## 실행 방법 요약
-
-- GUI: `streamlit run ui/dev_launcher.py` → 버튼으로 Run/Stop/Logs
-- API: `POST /run?name=modules.common.ping` with Envelope
-- 금지: 서버가 UI를 서빙하거나, 서버/코어가 pages/modules를 import
+자세한 내용은 파일 내 주석과 `policy_guard.py`를 확인하세요.

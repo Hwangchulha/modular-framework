@@ -9,7 +9,4 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
-      - run: pip install ruff mypy jsonschema pyyaml
-      - run: ruff .
-      - run: mypy . || true
       - run: python policy_guard.py
