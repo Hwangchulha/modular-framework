@@ -1,3 +1,4 @@
+from server.kis_diag import router as kis_diag_router
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -50,3 +51,5 @@ async def run(request: Request, name: str):
             "ok": False,
             "error": {"code": "ERR_INTERNAL", "message": str(e)}
         })
+
+app.include_router(kis_diag_router, prefix="/_kisdiag")
