@@ -1,0 +1,11 @@
+name: modules.broker.kis.auth
+version: 1.4.0
+engine_api: "^1.4"
+actions:
+  TOKEN:
+    modes: [SINGLE]
+    input_schema: schema/in.json
+    output_schema: schema/out.json
+    required_scopes: [auth:profile]
+    secrets: [JWT_SECRET]
+    resources: { rps: 5, burst: 10 }

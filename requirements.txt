@@ -1,6 +1,9 @@
+# Normalized requirements (one per line)
 fastapi>=0.110
 uvicorn>=0.23
 pydantic>=2.5
 jsonschema>=4.19
 PyYAML>=6.0
 PyJWT>=2.8
+cryptography>=42
+requests>=2.32

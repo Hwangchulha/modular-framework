@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "properties": {
+    "account_no": {
+      "type": "string"
+    },
+    "cash": {
+      "type": "integer"
+    },
+    "eval_amount": {
+      "type": "integer"
+    },
+    "pnl": {
+      "type": "integer"
+    },
+    "positions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "qty": {
+            "type": "integer"
+          },
+          "avg_price": {
+            "type": "number"
+          },
+          "eval_price": {
+            "type": "number"
+          },
+          "pnl": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "symbol",
+          "qty"
+        ]
+      }
+    }
+  },
+  "required": [
+    "account_no",
+    "cash",
+    "eval_amount",
+    "pnl",
+    "positions"
+  ]
+}

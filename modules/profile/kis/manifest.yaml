@@ -1,0 +1,18 @@
+name: modules.profile.kis
+version: 1.4.0
+engine_api: "^1.4"
+actions:
+  SET:
+    modes: [SINGLE]
+    input_schema: schema/set_in.json
+    output_schema: schema/set_out.json
+    required_scopes: [auth:profile]
+    secrets: [JWT_SECRET]
+    resources: { rps: 10, burst: 20 }
+  GET:
+    modes: [SINGLE]
+    input_schema: schema/get_in.json
+    output_schema: schema/get_out.json
+    required_scopes: [auth:profile]
+    secrets: [JWT_SECRET]
+    resources: { rps: 20, burst: 40 }

@@ -1,0 +1,6 @@
+# Add-only snippet for pyproject.toml
+# Merge guidance:
+# - Ensure `project.dependencies` includes:
+#   "PyJWT>=2.8", "cryptography>=42"
+# - If [project] section doesn't exist, you can skip and rely on requirements.txt
+#   (Dockerfile or start.py should install via requirements.txt in this repo.)

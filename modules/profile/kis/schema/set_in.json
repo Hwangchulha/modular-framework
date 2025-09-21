@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "properties": {
+    "app_key": {
+      "type": "string"
+    },
+    "app_secret": {
+      "type": "string"
+    },
+    "account_no": {
+      "type": "string"
+    },
+    "product_code": {
+      "type": "string"
+    },
+    "is_paper": {
+      "type": "boolean"
+    },
+    "custtype": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "app_key",
+    "app_secret",
+    "account_no",
+    "product_code",
+    "is_paper",
+    "custtype"
+  ],
+  "additionalProperties": false
+}
